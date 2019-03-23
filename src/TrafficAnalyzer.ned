@@ -1,6 +1,4 @@
 //
-// Copyright (C) 2004 Andras Varga
-//
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public License
 // as published by the Free Software Foundation; either version 2
@@ -18,7 +16,7 @@
 package yto;
 
 //
-// Silently discards all received packets.
+// Discards all received packets, collecting some information about them.
 //
 simple TrafficAnalyzer
 {

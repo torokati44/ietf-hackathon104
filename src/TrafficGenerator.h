@@ -13,8 +13,8 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 
-#ifndef __MAIN_TrafficGenerator_H_
-#define __MAIN_TrafficGenerator_H_
+#ifndef TRAFFICGENERATOR_H_INCLUDED
+#define TRAFFICGENERATOR_H_INCLUDED
 
 #include <omnetpp.h>
 #include <list>
@@ -75,6 +75,6 @@ protected:
 
 };
 
-} // namespace nesting
+} // namespace yto
 
-#endif
+#endif // TRAFFICGENERATOR_H_INCLUDED

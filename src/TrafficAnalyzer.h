@@ -1,6 +1,4 @@
 //
-// Copyright (C) 1992-2004 Andras Varga
-//
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public License
 // as published by the Free Software Foundation; either version 2
@@ -15,8 +13,8 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef __INET_SINK_H
-#define __INET_SINK_H
+#ifndef TRAFFICANALYZER_H_INCLUDED
+#define TRAFFICANALYZER_H_INCLUDED
 
 #include "inet/common/INETDefs.h"
 
@@ -45,7 +43,7 @@ class INET_API TrafficAnalyzer : public cSimpleModule
     virtual void finish() override;
 };
 
-} // namespace inet
+} // namespace yto
 
-#endif // ifndef __INET_SINK_H
+#endif // TRAFFICANALYZER_H_INCLUDED
 
