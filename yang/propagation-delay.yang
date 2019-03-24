@@ -1,0 +1,40 @@
+module propagation-delay {
+
+  namespace
+    "urn:propagation-delay";
+  prefix "pgd";
+
+  import "ietf-network" { prefix nd; }
+  import "ietf-network-topology" { prefix nt; }
+
+  contact
+    "Attila Torok <mailto:attila.torok@omnetpp.org>";
+
+  description
+    "Adds length and propagation speed parameters to links.";
+
+  revision 2019-03-24 {
+    description
+      "Initial version.";
+  }
+
+  augment "/nd:networks/nd:network/nt:link" {
+    description
+      "Adds extra parameters for links.";
+
+    leaf link-length {
+        description
+            "Length of the physical link.";
+        type uint64;
+        units "millimeters";
+    }
+
+    leaf propagation-speed {
+        description
+            "Propagation speed in the link medium.";
+        type uint64;
+        units "meters per second";
+        default 199862000;
+    }
+  }
+}
