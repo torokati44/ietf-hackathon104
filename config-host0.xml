@@ -5,6 +5,11 @@
       <name>p0</name>
       <type
         xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">ianaift:ethernetCsmacd</type>
+      <traffic-generator xmlns="urn:ietf:params:xml:ns:yang:ietf-traffic-generator">
+        <frame-size>64</frame-size>
+        <interframe-gap>20</interframe-gap>
+        <dst-mac-address>00:00:00:00:00:02</dst-mac-address>
+      </traffic-generator>
       <ethernet-like xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces-ethernet-like">
         <mac-address>00:00:00:00:00:00</mac-address>
       </ethernet-like>
@@ -12,10 +17,4 @@
   </interfaces>
   <nacm xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-acm">
   </nacm>
-  <traffic-generator xmlns="urn:omnetpp:summit:2018:xml:ns:yang:traffic-generator">
-    <frame-size>1514</frame-size>
-    <interframe-gap>12</interframe-gap>
-    <src-address>00:00:00:00:00:00</src-address>
-    <dst-address>00:00:00:00:00:02</dst-address>
-  </traffic-generator>
 </config>
