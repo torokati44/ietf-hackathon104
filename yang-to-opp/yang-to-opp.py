@@ -17,7 +17,6 @@ class Node:
         self.id = id
         self.termination_points = {}
         self.interfaces = {}
-        self.traffic_generators = []
         self.flows = {}
 
 class TerminationPoint:
@@ -28,12 +27,12 @@ class Interface:
     def __init__(self, name, address):
         self.name = name
         self.address = address
+        self.traffic_generators = []
 
 class TrafficGenerator:
-    def __init__(self, frame_size, interframe_gap, src_address, dst_address):
+    def __init__(self, frame_size, interframe_gap, dst_address):
         self.frame_size = frame_size
         self.interframe_gap = interframe_gap
-        self.src_address = src_address
         self.dst_address = dst_address
 
 class Link:
@@ -62,7 +61,7 @@ def parse_network_xml(xml_file_name):
         "netconf-acm": "urn:ietf:params:xml:ns:yang:ietf-netconf-acm",
         "netconf-node": "urn:tntapi:netconf-node",
         "fl": "urn:ietf:params:xml:ns:yang:ietf-network-bridge-flows",
-        "tg": "urn:omnetpp:summit:2018:xml:ns:yang:traffic-generator",
+        "tg": "urn:ietf:params:xml:ns:yang:ietf-traffic-generator",
         "if": "urn:ietf:params:xml:ns:yang:ietf-interfaces",
         "ift": "urn:ietf:params:xml:ns:yang:iana-if-type",
         "eth": "urn:ietf:params:xml:ns:yang:ietf-interfaces-ethernet-like",
@@ -103,28 +102,6 @@ def parse_network_xml(xml_file_name):
         if configs:
             config = configs[0]
 
-            traffic_generators = config.xpath(
-                "tg:traffic-generator", namespaces=namespaces)
-
-            for traffic_generator in traffic_generators:
-                frame_size = traffic_generator.xpath(
-                    "tg:frame-size/text()", namespaces=namespaces)[0]
-                interframe_gap = traffic_generator.xpath(
-                    "tg:interframe-gap/text()", namespaces=namespaces)[0]
-                src_address = traffic_generator.xpath(
-                    "tg:src-address/text()", namespaces=namespaces)[0]
-                dst_address = traffic_generator.xpath(
-                    "tg:dst-address/text()", namespaces=namespaces)[0]
-
-                traffic_generator_data = TrafficGenerator(
-                    frame_size, interframe_gap, src_address, dst_address)
-
-                node_data.traffic_generators.append(traffic_generator_data)
-
-                print("   ", frame_size, interframe_gap,
-                      src_address, dst_address)
-
-
             interfaces = config.xpath(
                 "if:interfaces/if:interface", namespaces=namespaces)
 
@@ -137,6 +114,26 @@ def parse_network_xml(xml_file_name):
                     interface_data = Interface(name[0], address[0])
                     node_data.interfaces[name[0]] = interface_data
                     print("   ", name[0], address[0])
+
+                traffic_generators = interface.xpath(
+                    "tg:traffic-generator", namespaces=namespaces)
+
+                for traffic_generator in traffic_generators:
+
+                    frame_size = traffic_generator.xpath(
+                        "tg:frame-size/text()", namespaces=namespaces)[0]
+                    interframe_gap = traffic_generator.xpath(
+                        "tg:interframe-gap/text()", namespaces=namespaces)[0]
+                    dst_address = traffic_generator.xpath(
+                        "tg:dst-mac-address/text()", namespaces=namespaces)[0]
+
+                    traffic_generator_data = TrafficGenerator(
+                        frame_size, interframe_gap, dst_address)
+
+                    interface_data.traffic_generators.append(traffic_generator_data)
+
+                    print("   ", frame_size, interframe_gap, dst_address)
+
 
 
             flows = config.xpath(
@@ -204,6 +201,7 @@ def generate_host_type(node_data, ned_file, ethernet_datarate):
 
     for intf_name, intf in node_data.interfaces.items():
         print("        eth_{}.address = \"{}\";".format(intf.name, intf.address), file=ned_file)
+        traf_gen = intf.traffic_generators[0] if intf.traffic_generators else None
 
     print("    gates:", file=ned_file)
 
@@ -212,7 +210,6 @@ def generate_host_type(node_data, ned_file, ethernet_datarate):
 
     print("    submodules:", file=ned_file)
 
-    traf_gen = node_data.traffic_generators[0] if node_data.traffic_generators else None
 
     for tp_id, tp in node_data.termination_points.items():
         print("        eth_{}: {} {{".format(id_to_name(tp.id), "VLANEthernetInterfaceHost"), file=ned_file)
